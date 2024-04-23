@@ -1,5 +1,8 @@
 <?php 
 include('includes/db.php');
+include('includes/function.php');
+$del_id = $_GET['delete'];
+delete('student_profile', $del_id);
 ?>
 <!doctype html>
 <html lang="en">
@@ -17,6 +20,9 @@ include('includes/db.php');
   <body>
     
   <div class="container">
+    <?php 
+    include("nav.php");
+    ?>
   <div class="row">
     <div class="col-sm-6 mt-2">
       <h2>All Student List</h2>
@@ -63,7 +69,8 @@ include('includes/db.php');
         <td><?= $v['sex']; ?></td>
         <td><?= $v['address']; ?></td>
         <td><?= $v['status']; ?></td>
-        <td><a href="#" class="btn btn-success btn-sm"><i class="bi bi-pencil"></i></a>  <a class="btn btn-danger btn-sm" href="#"><i class="bi bi-trash"></a></td>
+        <td><a href="update-record.php?id=<?= $v['id']; ?>" class="btn btn-success btn-sm"><i class="bi bi-pencil"></i></a>  
+        <a class="btn btn-danger btn-sm" href="?delete=<?= $v['id']; ?>"><i class="bi bi-trash"></a></td>
         
       </tr>
 

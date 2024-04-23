@@ -82,4 +82,32 @@ if(mysqli_query($conn, $sql)){
 
 }
 
+
+
+function delete($table, $id){
+
+    $host = 'localhost';
+$user = 'root';
+$pass = '';
+$db = 'student';
+
+$conn = mysqli_connect($host, $user, $pass, $db);
+if($conn){
+	//echo 'Connected to db!';
+}else{
+	die('Connection Fail'. mysqli_connect_error());
+}
+
+ 
+  $sql = "DELETE FROM $table WHERE id = $id";
+if(mysqli_query($conn, $sql)){ 
+    echo '<div class="alert alert-success" role="alert">
+    Record Deleted Successfully </div>';
+        }else{
+            echo '<div class="alert alert-danger" role="alert">
+            Something went Wrong! No record Deleted.</div>';
+        }
+
+}
+
 ?>
