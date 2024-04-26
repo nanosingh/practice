@@ -1,7 +1,7 @@
 <?php 
 function insert($table, $data){
 
-    $host = 'localhost';
+$host = 'localhost';
 $user = 'root';
 $pass = '';
 $db = 'student';
@@ -45,69 +45,36 @@ if(mysqli_query($conn, $sql)){
 
 
 
-function update($table, $data, $where){
+
+
+
+
+
+function get($table){
 
     $host = 'localhost';
-$user = 'root';
-$pass = '';
-$db = 'student';
+    $user = 'root';
+    $pass = '';
+    $db = 'student';
+    
+    $conn = mysqli_connect($host, $user, $pass, $db);
+    if($conn){
+        //echo 'Connected to db!';
+    }else{
+        die('Connection Fail'. mysqli_connect_error());
+    }
 
-$conn = mysqli_connect($host, $user, $pass, $db);
-if($conn){
-	//echo 'Connected to db!';
-}else{
-	die('Connection Fail'. mysqli_connect_error());
-}
+     $sql = "SELECT * FROM $table";
+    // die;/
+   $row = mysqli_query($conn, $sql);
+   $rows = mysqli_num_rows($row);
+   if($rows=='1'){
+        $data = mysqli_fetch_assoc($row);
 
-   //$data = array_filter($data);
-
-$key = array_keys($data);
-
-$trail ="";
-$i=0;
-foreach($data as $value){
- $trail .= $key[$i] . "=" . "'". $value . "', "; 
- $i++;
-}
-$values = trim($trail, ", ");
-//UPDATE table SET column = 'value' where column = 'value'
-  $sql = "UPDATE $table SET $values WHERE $where";
-if(mysqli_query($conn, $sql)){ 
-    echo '<div class="alert alert-success" role="alert">
-    Record Updated Successfully </div>';
-        }else{
-            echo '<div class="alert alert-danger" role="alert">
-            Something went Wrong! No record Updated.</div>';
-        }
-
-}
-
-
-
-function delete($table, $id){
-
-    $host = 'localhost';
-$user = 'root';
-$pass = '';
-$db = 'student';
-
-$conn = mysqli_connect($host, $user, $pass, $db);
-if($conn){
-	//echo 'Connected to db!';
-}else{
-	die('Connection Fail'. mysqli_connect_error());
-}
-
- 
-  $sql = "DELETE FROM $table WHERE id = $id";
-if(mysqli_query($conn, $sql)){ 
-    echo '<div class="alert alert-success" role="alert">
-    Record Deleted Successfully </div>';
-        }else{
-            echo '<div class="alert alert-danger" role="alert">
-            Something went Wrong! No record Deleted.</div>';
-        }
-
-}
+    }elseif($rows>1){
+       $data = $row;
+    }
+    return $data;
+}  
 
 ?>

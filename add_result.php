@@ -32,7 +32,11 @@ include('db.php');
         <div class='container'>
             <div class='row col-sm-6'>
 <?php
-$std_id = $_GET['name']
+if (isset ($_GET['name'])){
+    $std_id = $_GET['name'];
+}else{
+    $std_id ='';
+}
 ?>
  <form action='' method='GET'>
                 <div class="mb-1">
@@ -51,6 +55,8 @@ $std_id = $_GET['name']
  </form>
 
  <form action='' method='GET'>
+
+ <?php if (isset ($_GET['name'])){ ?>
                 <div class="mb-1">
                     <label for="student_id" class="form-label">Course Name</label>
                     <?php $stu = "select * from stu_profile inner join course on stu_profile.course_id = course.id where stu_profile.id='$std_id'"; 
@@ -62,6 +68,8 @@ $std_id = $_GET['name']
                     <label for="student_id" class="form-label"></label>
                     <input type="text" readonly value="<?= $s['course_name'];?>" class="form-control" name="student_id">
                 </div>
+
+
                 <div class="mb-1">
                     <label for="sem" class="form-label">Semester</label>
                     <input type="text" class="form-control" name="sem">
@@ -74,7 +82,7 @@ $std_id = $_GET['name']
                     <label for="obtain_marks" class="form-label">Obtain Marks</label>
                     <input type="text" class="form-control" name="obtain_marks">
                 </div>
-                
+                <?php } ?>
                 <div class="mb-3">
 
                     <input type='submit' class='form-control btn btn-primary' name='submit'>
