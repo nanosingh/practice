@@ -1,5 +1,5 @@
 <?php 
-include('includes/db.php');
+include('includes/function.php');
 
 if(isset($_POST['submit'])){
     if($_POST['status']){
@@ -8,14 +8,27 @@ if(isset($_POST['submit'])){
         $status='0';
     }
     
-    $sql = "insert into student_profile (roll_no, course_id, batch_id, name, dob, father, email, sex, address, status) VALUES ('$_POST[roll_no]', '$_POST[course]', '$_POST[batch]', '$_POST[name]', '$_POST[dob]', '$_POST[father]', '$_POST[email]', '$_POST[gender]', '$_POST[address]', '$status')";
-    if(mysqli_query($conn, $sql)){ 
-echo '<div class="alert alert-success" role="alert">
-Record Added Successfully for: '.$_POST['name'].'</div>';
-    }else{
-        echo '<div class="alert alert-danger" role="alert">
-        Something went Wrong! No record Added.</div>';
-    }
+$data = array(
+    'roll_no'=>$_POST['roll_no'], 
+    'course_id'=>$_POST['course'], 
+    'batch_id'=>$_POST['batch'], 
+    'name'=>$_POST['name'], 
+    'dob'=>$_POST['dob'], 
+    'father'=>$_POST['father'], 
+    'email'=>$_POST['email'], 
+    'sex'=>$_POST['gender'], 
+    'address'=>$_POST['address'], 
+    'status'=>$status
+);
+insert('student_profile', $data);
+    //$sql = "insert into student_profile (roll_no, course_id, batch_id, name, dob, father, email, sex, address, status) VALUES ('$_POST[roll_no]', '$_POST[course]', '$_POST[batch]', '$_POST[name]', '$_POST[dob]', '$_POST[father]', '$_POST[email]', '$_POST[gender]', '$_POST[address]', '$status')";
+//     if(mysqli_query($conn, $sql)){ 
+// echo '<div class="alert alert-success" role="alert">
+// Record Added Successfully for: '.$_POST['name'].'</div>';
+//     }else{
+//         echo '<div class="alert alert-danger" role="alert">
+//         Something went Wrong! No record Added.</div>';
+//     }
 }
 ?>
 <!doctype html>
@@ -37,6 +50,9 @@ Record Added Successfully for: '.$_POST['name'].'</div>';
 <body>
 
     <div class="container">
+    <?php 
+    include("nav.php");
+    ?>
         <div class="row">
             <div class="col-sm-6 mt-2">
                 <h2>Add Student Record</h2>

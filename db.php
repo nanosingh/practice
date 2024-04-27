@@ -1,4 +1,7 @@
 <?php 
+function db(){
+
+
 $host = 'localhost';
 $user = 'root';
 $pass = '';
@@ -10,6 +13,6 @@ if($conn){
 }else{
 	die('Connection Fail'. mysqli_connect_error());
 }
-
-
+return $conn;
+}
 ?>

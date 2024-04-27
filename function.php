@@ -1,20 +1,8 @@
 <?php 
+include('db.php');
+
 function insert($table, $data){
-
-$host = 'localhost';
-$user = 'root';
-$pass = '';
-$db = 'student';
-
-$conn = mysqli_connect($host, $user, $pass, $db);
-if($conn){
-	//echo 'Connected to db!';
-}else{
-	die('Connection Fail'. mysqli_connect_error());
-}
-
-
-
+$conn = db();
    $data = array_filter($data);
    //echo $table;
 // echo "<pre>";
@@ -45,36 +33,59 @@ if(mysqli_query($conn, $sql)){
 
 
 
+function update($table, $data, $where){
+
+    $conn = db();
+
+
+   //$data = array_filter($data);
+
+$key = array_keys($data);
+
+$trail ="";
+$i=0;
+foreach($data as $value){
+ $trail .= $key[$i] . "=" . "'". $value . "', "; 
+ $i++;
+}
+$values = trim($trail, ", ");
+//UPDATE table SET column = 'value' where column = 'value'
+  $sql = "UPDATE $table SET $values WHERE $where";
+if(mysqli_query($conn, $sql)){ 
+    echo '<div class="alert alert-success" role="alert">
+    Record Updated Successfully </div>';
+        }else{
+            echo '<div class="alert alert-danger" role="alert">
+            Something went Wrong! No record Updated.</div>';
+        }
+
+}
 
 
 
+function delete($table, $id){
+    $conn = db();
 
+  $sql = "DELETE FROM $table WHERE id = $id";
+if(mysqli_query($conn, $sql)){ 
+    echo '<div class="alert alert-success" role="alert">
+    Record Deleted Successfully </div>';
+        }else{
+            echo '<div class="alert alert-danger" role="alert">
+            Something went Wrong! No record Deleted.</div>';
+        }
+
+}
 
 function get($table){
+    $conn = db();
 
-    $host = 'localhost';
-    $user = 'root';
-    $pass = '';
-    $db = 'student';
-    
-    $conn = mysqli_connect($host, $user, $pass, $db);
-    if($conn){
-        //echo 'Connected to db!';
-    }else{
-        die('Connection Fail'. mysqli_connect_error());
+    $sql = "select * from $table";
+    if (mysqli_query($conn, $sql)){
+        $data = mysqli_query($conn, $sql);
+return $data;
     }
 
-     $sql = "SELECT * FROM $table";
-    // die;/
-   $row = mysqli_query($conn, $sql);
-   $rows = mysqli_num_rows($row);
-   if($rows=='1'){
-        $data = mysqli_fetch_assoc($row);
-
-    }elseif($rows>1){
-       $data = $row;
-    }
-    return $data;
-}  
+}
 
 ?>
