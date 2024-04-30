@@ -1,31 +1,30 @@
 <?php 
-include('includes/db.php');
 include('includes/function.php');
 $id = $_GET['id'];
-if(isset($_POST['submit'])){
+//if(isset($_POST['submit'])){
     //echo "Bingo!";
     if(isset($_POST['status'])){
         $status='1';
     }else{ $status = '0'; }
-$data = array(
-   'roll_no' => $_POST['roll_no'],
-   'course_id' =>  $_POST['course'],
-   'batch_id' =>  $_POST['batch'],
-   'name' =>  $_POST['name'],
-   'dob' =>  $_POST['dob'],
-   'father' =>  $_POST['father'],
-   'email' =>  $_POST['email'],
-   'sex' =>  $_POST['gender'],
-   'address' =>  $_POST['address'],
-   'status' =>  $status
-);
+// $data = array(
+//    'roll_no' => $_POST['roll_no'],
+//    'course_id' =>  $_POST['course'],
+//    'batch_id' =>  $_POST['batch'],
+//    'name' =>  $_POST['name'],
+//    'dob' =>  $_POST['dob'],
+//    'father' =>  $_POST['father'],
+//    'email' =>  $_POST['email'],
+//    'sex' =>  $_POST['gender'],
+//    'address' =>  $_POST['address'],
+//    'status' =>  $status
+// );
 
-$where = "id=".$_GET['id'];
-update('student_profile', $data, $where);
-}
+// $where = "id=".$_GET['id'];
+// update('student_profile', $data, $where);
+// }
 
 
-
+$conn = db();
 $sql = "SELECT * FROM student_profile where id = $id";
       $data = mysqli_query($conn, $sql);
       $row = mysqli_fetch_assoc($data);
@@ -52,6 +51,9 @@ $sql = "SELECT * FROM student_profile where id = $id";
 <body>
 
     <div class="container">
+    <?php 
+    include("nav.php");
+    ?>
         <div class="row">
             <div class="col-sm-6 mt-2">
                 <h2>Update Student Record</h2>
@@ -72,7 +74,7 @@ $sql = "SELECT * FROM student_profile where id = $id";
 
         <label for="course" class="col-sm-3 col-form-label">Course*</label>
             <div class="col-sm-9 mt-1">
-                <select name="course" required class="form-control">
+                <select name="course_id" required class="form-control">
                     <option value="">--SELECT COURSE--</option>
             <?php 
       $sql = "SELECT * FROM course";
@@ -88,7 +90,7 @@ $sql = "SELECT * FROM student_profile where id = $id";
 
         <label for="batch" class="col-sm-3 col-form-label">Batch*</label>
             <div class="col-sm-9 mt-1">
-                <select required name="batch" class="form-control">
+                <select required name="batch_id" class="form-control">
                 <option value="">--SELECT BATCH--</option>
             <?php 
       $sql = "SELECT * FROM batch";
@@ -124,7 +126,7 @@ $sql = "SELECT * FROM student_profile where id = $id";
 
             <label for="gender" class="col-sm-3 col-form-label">Gender</label>
             <div class="col-sm-9 mt-1">
-                <input type="text" value="<?= $row['sex']; ?>" name="gender" id="gender" class="form-control">
+                <input type="text" value="<?= $row['sex']; ?>" name="sex" id="gender" class="form-control">
             </div>
 
             <label for="address" class="col-sm-3 col-form-label">Address</label>
@@ -139,7 +141,9 @@ $sql = "SELECT * FROM student_profile where id = $id";
             </div>
 
             <div class="col-sm-12 mt-1 text-end">
-                <input type="submit" class="btn btn-primary" name="submit" value="Update Record">
+            <input type="hidden" name="table" value="student_profile">
+            <button class="btn btn-primary" name="update">Update Record</button>
+                
             </div>
 
 
