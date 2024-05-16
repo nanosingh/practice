@@ -1,24 +1,19 @@
 <?php 
 include('db.php');
 
-define ('BASE_URL', 'http://localhost/practice/');
+define ('BASE_URL', 'http://localhost/pro1/');
 
 
-function insert($table,$data){
-    $conn = db();
-    $data = array_filter($data);
-    // array filter is use to if key is exits for values then insert is array otherwise exit both key and values
+function insert($table, $data){
+$conn = db();
+   $data = array_filter($data);
    //echo $table;
 // echo "<pre>";
 // print_r($data);
 // //die; insert into table(column1, column2, column3) values ('column1', 'column2', 'column3');
 
 $key = array_keys($data);
-//print_r($key);
-//echo "<br>";
 $key = implode(", ",$key);
-//print_r($key);
-//die;
 $values="";
 foreach($data as $value){
     $values .= $value."','";
@@ -26,10 +21,8 @@ foreach($data as $value){
  $values = trim($values, ",'");
 
 $sql = "INSERT INTO $table ($key) VALUES ('$values')";
- //echo $sql;
- //die;
-
-
+//echo $sql;
+//die;
 if(mysqli_query($conn, $sql)){ 
     echo '<div class="alert alert-success" role="alert">
     Record Added Successfully </div>';
@@ -46,7 +39,7 @@ if(mysqli_query($conn, $sql)){
 
 function update($table, $data, $where){
 
-$conn = db();
+    $conn = db();
 
 
    //$data = array_filter($data);
@@ -58,27 +51,11 @@ $i=0;
 foreach($data as $value){
  $trail .= $key[$i] . "=" . "'". $value . "', "; 
  $i++;
- //echo "<pre>";
- //print_r($trail). "<br>";
- //print_r($value). "<br>";
- 
- //echo "</pre>";
 }
-//print_r($trail). "<br>";
-//echo "<br>";
 $values = trim($trail, ", ");
-//print_r($values). "<br>";
-
 //UPDATE table SET column = 'value' where column = 'value'
-//echo "<pre>";
-//print_r($values);
-//echo "</pre>";
-//die;
-  $sql1 = "UPDATE $table SET $values WHERE id = $where";
-    // echo $table;
-    // echo $sql1;
-    // die;
-if(mysqli_query($conn, $sql1)){ 
+  $sql = "UPDATE $table SET $values WHERE $where";
+if(mysqli_query($conn, $sql)){ 
     echo '<div class="alert alert-success" role="alert">
     Record Updated Successfully </div>';
         }else{
@@ -115,40 +92,46 @@ return $data;
 
 }
 
+function getuser(){
+    $conn = db();
+    session_start();
+    @$id = $_SESSION['id'];
+    $sql = "select * from users where id = '$id'";
+    if (mysqli_query($conn, $sql)){
+        $data = mysqli_query($conn, $sql);
+        $obj = $data->fetch_object();
+    
+return $obj;
+    }
+}
+
+function getid($table,$id){
+    $conn = db();
+
+    $sql = "select * from $table where id = '$id'";
+    if (mysqli_query($conn, $sql)){
+        $data = mysqli_query($conn, $sql);
+        $obj = $data->fetch_object();
+return $obj;
+    }
+
+}
+
 
 function autoinsert(){
-//     <form action method=POST>
-//     <input type ="text" name="course">
-//     Fee <input type ="text" name="course1">
-//    </form>
-//    $a = array(
-//     'course_name' => $_POST['course']
-//     'fee' => $_POST['course1']
-//    );
+// print_r($_POST);
+// die;
 foreach($_POST as $key => $value){
-    
     if($key & $value){
-
-        // print_r($key);
-        // echo "<br>";
-        // print_r($value);
-        // die;
         $post[$key] = $value;
-        //print_r($post[$key]);
-        
         if(array_key_exists('table', $post)){
             // nothing to do
         }else{
             $array[$key] = $value;
-            // print_r($array);
-            // print_r($array[$key]);
-            // die;
         }
     }
 }
 $table = $_POST['table'];
-// echo $table;
-// die;
 insert($table, $array);
 }
 
@@ -159,59 +142,44 @@ if(isset($_POST['insert'])){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-function autoupdate(){
-    $where = $_GET['id'];
-    //update('student_profile', $data, $where);  
-      //echo $where;
-
-    //function update($table, $data, $where){
-    //     <form action method=POST>
-    //     <input type ="text" name="course">
-    //     Fee <input type ="text" name="course1">
-    //    </form>
-    //    $a = array(
-    //     'course_name' => $_POST['course']
-    //     'fee' => $_POST['course1']
-    //    );
-    //echo "Hello";
+function logout(){
+    session_start();
+    session_destroy();
     
-    foreach($_POST as $key => $value){
-        
-        if($key & $value){
-    
-            //print_r($key);
-            //print_r($value);
-            $post[$key] = $value;
-            //print_r($post[$key]);
-            
-            if(array_key_exists('table', $post)){
-                // nothing to do
-            }else{
-                $array[$key] = $value;
-                //print_r($array);
-                //print_r($array[$key]);
-                //die;
-            }
-        }
-    }
-    $table = $_POST['table'];
-    // echo $table;
-    // die;
-    update($table, $array, $where);
-    }
-    if(isset($_POST['update'])){
-        autoupdate();
-    } 
+    header("location: index.php");
+    die();
+}
+
+function check_session(){
+@session_start();
+if($_SESSION['admin'] ==''){
+    session_destroy();
+$login_url = BASE_URL. "login/";
+    header("location: $login_url");
+    die();
+}
+}
+
+$user = getuser();
+
+if(isset($_GET['logout']))
+{
+    logout();
+}
+
+
+if(@$page !== 'login.php' AND @$page !== 'registration.php'){
+    check_session();
+}
+
+
+function isAdmin(){
+    @session_start();
+if(@$_SESSION['type']!=='admin'){
+return false;
+}else{
+    return true;
+}
+}
+
 ?>
