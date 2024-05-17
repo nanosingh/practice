@@ -1,7 +1,24 @@
 <?php 
 include('db.php');
 
-define ('BASE_URL', 'http://localhost/pro1/');
+define ('BASE_URL', 'http://localhost/practice/');
+
+function sanitize($data){
+    $conn = db();
+    $data = filter_var($data, FILTER_SANITIZE_NUMBER_INT);
+    // $data = htmlspecialchars($data);
+    // $data = mysqli_real_escape_string($conn, $data);
+    return $data;
+
+    /*
+filter_var($data, FILTER_SANITIZE_URL); filter url
+filter_var($data, FILTER_SANITIZE_NUMBER_INT); filter Integet
+filter_var($data, FILTER_SANITIZE_NUMBER_FLOAT); filter Flot
+filter_var($data, FILTER_SANITIZE_EMAIL); filter email
+filter_var($data, FILTER_SANITIZE_FULL_SPECIAL_CHARS); filter Special Char
+    */
+    
+}
 
 
 function insert($table, $data){
@@ -16,19 +33,19 @@ $key = array_keys($data);
 $key = implode(", ",$key);
 $values="";
 foreach($data as $value){
-    $values .= $value."','";
+    $values .= sanitize($value)."','";
 }
  $values = trim($values, ",'");
-
+//$sd = sanitize($values);
 $sql = "INSERT INTO $table ($key) VALUES ('$values')";
-//echo $sql;
-//die;
+echo $sql;
+die;
 if(mysqli_query($conn, $sql)){ 
     echo '<div class="alert alert-success" role="alert">
     Record Added Successfully </div>';
         }else{
             echo '<div class="alert alert-danger" role="alert">
-            Something went Wrong! No record Added.</div>';
+            Something went Wrong! No record Added.'. mysqli_error($conn) .'</div>';
         }
 
 }
@@ -95,7 +112,7 @@ return $data;
 function getuser(){
     $conn = db();
     session_start();
-    @$id = $_SESSION['id'];
+    $id = $_SESSION['id'];
     $sql = "select * from users where id = '$id'";
     if (mysqli_query($conn, $sql)){
         $data = mysqli_query($conn, $sql);
@@ -175,10 +192,9 @@ if(@$page !== 'login.php' AND @$page !== 'registration.php'){
 
 function isAdmin(){
     @session_start();
-if(@$_SESSION['type']!=='admin'){
-return false;
-}else{
-    return true;
+if($_SESSION['type']!=='admin'){
+echo "You are not authorized";
+die;
 }
 }
 
