@@ -5,7 +5,7 @@ define ('BASE_URL', 'http://localhost/practice/');
 
 function sanitize($data){
     $conn = db();
-    $data = filter_var($data, FILTER_SANITIZE_NUMBER_INT);
+    //$data = filter_var($data, FILTER_SANITIZE_NUMBER_INT);
     // $data = htmlspecialchars($data);
     // $data = mysqli_real_escape_string($conn, $data);
     return $data;
@@ -33,13 +33,13 @@ $key = array_keys($data);
 $key = implode(", ",$key);
 $values="";
 foreach($data as $value){
-    $values .= sanitize($value)."','";
+    $values .= $value."','";
 }
  $values = trim($values, ",'");
 //$sd = sanitize($values);
 $sql = "INSERT INTO $table ($key) VALUES ('$values')";
-echo $sql;
-die;
+// echo $sql;
+// die;
 if(mysqli_query($conn, $sql)){ 
     echo '<div class="alert alert-success" role="alert">
     Record Added Successfully </div>';
@@ -196,6 +196,17 @@ if($_SESSION['type']!=='admin'){
 echo "You are not authorized";
 die;
 }
+
+
+function csrf_token(){
+    
+        $token = md5(uniqid(mt_rand(), true));
+        
+    
+    return $token;
+}
+
+
 }
 
 ?>
